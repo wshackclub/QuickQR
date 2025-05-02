@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>QuickQR</title>
   <script src="https://cdn.jsdelivr.net/npm/qrious@4.0.2/dist/qrious.min.js"></script>
   <style>
@@ -14,11 +14,14 @@
       justify-content: center;
       min-height: 100vh;
       background: #f2f2f2;
+      padding: 20px;
     }
+
     h1 {
       color: #333;
     }
-    input, button {
+
+    input, select, button {
       padding: 10px;
       font-size: 16px;
       margin-top: 10px;
@@ -26,38 +29,75 @@
       border-radius: 5px;
       border: 1px solid #ccc;
     }
+
     button {
       background-color: #4caf50;
       color: white;
       cursor: pointer;
     }
+
     button:hover {
       background-color: #45a049;
     }
+
     #qr {
       margin-top: 20px;
+    }
+
+    .hidden {
+      display: none;
     }
   </style>
 </head>
 <body>
   <h1>QuickQR</h1>
-  <input type="url" id="url" placeholder="Enter website URL (e.g., https://example.com)" />
+
+  <select id="type">
+    <option value="url">Website</option>
+    <option value="email">Email</option>
+    <option value="phone">Phone Number</option>
+  </select>
+
+  <input type="text" id="input" placeholder="Enter your content..." />
   <button onclick="generateQR()">Generate QR Code</button>
   <canvas id="qr"></canvas>
+  <button id="downloadBtn" class="hidden" onclick="downloadQR()">Download QR Code</button>
 
   <script>
+    const qrCanvas = document.getElementById('qr');
     const qr = new QRious({
-      element: document.getElementById('qr'),
+      element: qrCanvas,
       size: 250,
     });
 
     function generateQR() {
-      const url = document.getElementById('url').value.trim();
-      if (url) {
-        qr.value = url;
-      } else {
-        alert("Please enter a valid URL.");
+      const input = document.getElementById('input').value.trim();
+      const type = document.getElementById('type').value;
+
+      if (!input) {
+        alert("Please enter something.");
+        return;
       }
+
+      let valueToEncode = "";
+
+      if (type === 'url') {
+        valueToEncode = input.startsWith('http') ? input : 'https://' + input;
+      } else if (type === 'email') {
+        valueToEncode = `mailto:${input}`;
+      } else if (type === 'phone') {
+        valueToEncode = `tel:${input}`;
+      }
+
+      qr.value = valueToEncode;
+      document.getElementById('downloadBtn').classList.remove('hidden');
+    }
+
+    function downloadQR() {
+      const link = document.createElement('a');
+      link.download = 'quickqr-code.png';
+      link.href = qrCanvas.toDataURL();
+      link.click();
     }
   </script>
 </body>
