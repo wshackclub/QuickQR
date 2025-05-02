@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>QuickQR</title>
+  <script src="https://cdn.jsdelivr.net/npm/qrious@4.0.2/dist/qrious.min.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      background: #f2f2f2;
+    }
+    h1 {
+      color: #333;
+    }
+    input, button {
+      padding: 10px;
+      font-size: 16px;
+      margin-top: 10px;
+      width: 300px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+    button {
+      background-color: #4caf50;
+      color: white;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #45a049;
+    }
+    #qr {
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+  <h1>QuickQR</h1>
+  <input type="url" id="url" placeholder="Enter website URL (e.g., https://example.com)" />
+  <button onclick="generateQR()">Generate QR Code</button>
+  <canvas id="qr"></canvas>
+
+  <script>
+    const qr = new QRious({
+      element: document.getElementById('qr'),
+      size: 250,
+    });
+
+    function generateQR() {
+      const url = document.getElementById('url').value.trim();
+      if (url) {
+        qr.value = url;
+      } else {
+        alert("Please enter a valid URL.");
+      }
+    }
+  </script>
+</body>
+</html>
